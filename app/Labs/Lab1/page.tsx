@@ -1,6 +1,6 @@
+"use client";
 import Image from "next/image";
 
-"use client";
 export default function Lab1() {
     return (
         <div id="wd-lab1">
