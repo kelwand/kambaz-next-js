@@ -18,7 +18,7 @@ export default function Labs() {
            Lab 3: JavaScript Fundamentals </Link>
        </li>
         <li>
-          <a href="https://github.com/kelwand/kambaz-next-js" target="_blank">
+          <a href="https://github.com/kelwand/kambaz-next-js" id="wd-github" target="_blank">
             Link to Github: Kambaz Next.js Repository
           </a>
         </li>
