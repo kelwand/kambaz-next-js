@@ -1,6 +1,4 @@
 "use client";
-import Image from "next/image";
-
 export default function Lab1() {
     return (
         <div id="wd-lab1">
@@ -176,7 +174,7 @@ export default function Lab1() {
             <div id="wd-images">
                 <h4>Image tag</h4>
                 Loading an image from the internet: <br />
-                <Image 
+                <img 
                 id="wd-starship" 
                 width={400}
                 height={300}
@@ -186,7 +184,7 @@ export default function Lab1() {
                 <br />
                 Loading a local image:
                 <br />
-                <Image 
+                <img 
                 id="wd-teslabot" 
                 src="/images/teslabot.jpg" 
                 height={200} 
