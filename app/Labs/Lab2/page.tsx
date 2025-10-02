@@ -40,7 +40,7 @@ export default function Lab2() {
           elements of the same name, e.g., P, we can refer to a specific element by its ID
         </p>
         <p id="wd-id-selector-2">
-          Here's another paragraph using a different ID and a different look and
+          Here&apos;s another paragraph using a different ID and a different look and
           feel
         </p>
       </div>
@@ -49,7 +49,7 @@ export default function Lab2() {
         <h3>Class selectors</h3>
 
         <p className="wd-class-selector">
-          Instead of using IDs to refer to elements, you can use an element's CLASS attribute
+          Instead of using IDs to refer to elements, you can use an element&apos;s CLASS attribute
         </p>
 
         <h4 className="wd-class-selector">
