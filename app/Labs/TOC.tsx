@@ -1,26 +1,27 @@
+"use client";
+import Nav from "react-bootstrap/Nav";
 import Link from "next/link";
 export default function TOC() {
- return (
-   <ul>
-     <li>
-       <Link href="/Labs" id="wd-lab1-link">
-         Home </Link>
-     </li>
-     <li>
-       <Link href="/Labs/Lab1" id="wd-lab1-link">
-         Lab 1 </Link>
-     </li>
-     <li>
-       <Link href="/Labs/Lab2" id="wd-lab2-link">
-         Lab 2 </Link>
-     </li>
-     <li>
-       <Link href="/Labs/Lab3" id="wd-lab3-link">
-         Lab 3 </Link>
-     </li>
-     <li>
-       <Link href="/" id="wd-lab3-link">
-         Kambaz </Link> </li>
-   </ul>
-);}
-
+  return (
+    <Nav variant="pills">
+      <Nav.Item>
+        <Nav.Link href="/Labs">Labs</Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link href="/Labs/Lab1">Lab 1</Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link href="/Labs/Lab2">Lab 2</Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link href="/Labs/Lab3">Lab 3</Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link href="/">Kambaz</Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link href="https://github.com/kelwand" target="_blank">My GitHub</Nav.Link>
+      </Nav.Item>
+    </Nav>
+  );
+}
