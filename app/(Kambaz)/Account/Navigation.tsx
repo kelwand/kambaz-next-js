@@ -6,7 +6,7 @@ import { ListGroup, ListGroupItem } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function AccountNavigation() {
-  const pathname = usePathname();
+  const pathname: string = usePathname() || "";
 
   const getItemClasses = (path: string) => {
     return `list-group-item border-0 ${pathname.includes(path) ? "active" : ""}`;
