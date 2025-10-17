@@ -6,8 +6,15 @@ import * as db from "../Database";
 import { Row, Col, Card, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+interface Course {
+  _id: string;
+  name: string;
+  description?: string;
+  image?: string;
+}
+
 export default function Dashboard() {
-  const courses = db.courses; 
+  const courses: Course[] = db.courses;
 
   return (
     <div id="wd-dashboard" className="p-3">
@@ -28,7 +35,7 @@ export default function Dashboard() {
                   className="wd-dashboard-course-link text-decoration-none text-dark"
                 >
                   <Image
-                    src={`/images/${(course as any).image || "reactjs.jpg"}`}
+                    src={`/images/${course.image || "reactjs.jpg"}`}
                     alt={course.name}
                     width={300}
                     height={180}
