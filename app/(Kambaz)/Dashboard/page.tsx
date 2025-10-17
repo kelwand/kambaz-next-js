@@ -1,141 +1,58 @@
+"use client";
+
 import Link from "next/link";
-import { Row, Col, Card, CardImg, CardBody, CardTitle, CardText, Button } from "react-bootstrap";
+import Image from "next/image";
+import * as db from "../Database"; 
+import { Row, Col, Card, Button } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Dashboard() {
+  const courses = db.courses; 
+
   return (
-    <div id="wd-dashboard">
+    <div id="wd-dashboard" className="p-3">
       <h1 id="wd-dashboard-title">Dashboard</h1>
       <hr />
-      <h2 id="wd-dashboard-published">Published Courses (7)</h2>
+      <h2 id="wd-dashboard-published">
+        Published Courses ({courses.length})
+      </h2>
       <hr />
 
-      <Row xs={1} md={4} className="g-4">
-        {/* Course 1 */}
-        <Col>
-          <Card style={{ width: "270px" }}>
-            <Link href="/Courses/1234" className="text-decoration-none text-dark">
-              <CardImg variant="top" src="/images/reactjs.jpg" height={160} />
-              <CardBody>
-                <CardTitle className="text-nowrap overflow-hidden">
-                  CS1234 React JS
-                </CardTitle>
-                <CardText className="overflow-hidden" style={{ height: "100px" }}>
-                  Full Stack software developer
-                </CardText>
-                <Button variant="primary">Go</Button>
-              </CardBody>
-            </Link>
-          </Card>
-        </Col>
-
-        {/* Course 2 */}
-        <Col>
-          <Card style={{ width: "270px" }}>
-            <Link href="/Courses/1800" className="text-decoration-none text-dark">
-              <CardImg variant="top" src="/images/discrete.webp" height={160} />
-              <CardBody>
-                <CardTitle className="text-wrap overflow-hidden">
-                  CS1800 Discrete Structures
-                </CardTitle>
-                <CardText className="overflow-hidden" style={{ height: "100px" }}>
-                  Mathematical Foundation
-                </CardText>
-                <Button variant="primary">Go</Button>
-              </CardBody>
-            </Link>
-          </Card>
-        </Col>
-
-        {/* Course 3 */}
-        <Col>
-          <Card style={{ width: "270px" }}>
-            <Link href="/Courses/2500" className="text-decoration-none text-dark">
-              <CardImg variant="top" src="/images/Racket Logo.png" height={160} />
-              <CardBody>
-                <CardTitle className="text-wrap overflow-hidden">
-                  CS2500 Fundamentals of Computer Science 1
-                </CardTitle>
-                <CardText className="overflow-hidden" style={{ height: "100px" }}>
-                  Intro to Programming 1
-                </CardText>
-                <Button variant="primary">Go</Button>
-              </CardBody>
-            </Link>
-          </Card>
-        </Col>
-
-        {/* Course 4 */}
-        <Col>
-          <Card style={{ width: "270px" }}>
-            <Link href="/Courses/2510" className="text-decoration-none text-dark">
-              <CardImg variant="top" src="/images/java.jpg" height={160} />
-              <CardBody>
-                <CardTitle className="text-wrap overflow-hidden">
-                  CS2510 Fundamentals of Computer Science 2
-                </CardTitle>
-                <CardText className="overflow-hidden" style={{ height: "100px" }}>
-                  Intro to Programming 2
-                </CardText>
-                <Button variant="primary">Go</Button>
-              </CardBody>
-            </Link>
-          </Card>
-        </Col>
-
-        {/* Course 5 */}
-        <Col>
-          <Card style={{ width: "270px" }}>
-            <Link href="/Courses/3500" className="text-decoration-none text-dark">
-              <CardImg variant="top" src="/images/ood.jpeg" height={160} />
-              <CardBody>
-                <CardTitle className="text-wrap overflow-hidden">
-                  CS3500 Object Orient Design
-                </CardTitle>
-                <CardText className="overflow-hidden" style={{ height: "100px" }}>
-                  Object-Oriented Programming
-                </CardText>
-                <Button variant="primary">Go</Button>
-              </CardBody>
-            </Link>
-          </Card>
-        </Col>
-
-        {/* Course 6 */}
-        <Col>
-          <Card style={{ width: "270px" }}>
-            <Link href="/Courses/2550" className="text-decoration-none text-dark">
-              <CardImg variant="top" src="/images/security.jpg" height={160} />
-              <CardBody>
-                <CardTitle className="text-wrap overflow-hidden">
-                  CY2550 Foundations of CyberSecurity
-                </CardTitle>
-                <CardText className="overflow-hidden" style={{ height: "100px" }}>
-                  Introduction to CyberSecurity
-                </CardText>
-                <Button variant="primary">Go</Button>
-              </CardBody>
-            </Link>
-          </Card>
-        </Col>
-
-        {/* Course 7 */}
-        <Col>
-          <Card style={{ width: "270px" }}>
-            <Link href="/Courses/3000" className="text-decoration-none text-dark">
-              <CardImg variant="top" src="/images/python.png" height={160} />
-              <CardBody>
-                <CardTitle className="text-wrap overflow-hidden">
-                  DS3000 Foundations of Data Science
-                </CardTitle>
-                <CardText className="overflow-hidden" style={{ height: "100px" }}>
-                  Intro to Data Science
-                </CardText>
-                <Button variant="primary">Go</Button>
-              </CardBody>
-            </Link>
-          </Card>
-        </Col>
-      </Row>
+      <div id="wd-dashboard-courses">
+        <Row xs={1} md={3} lg={4} className="g-4">
+          {courses.map((course) => (
+            <Col key={course._id} className="wd-dashboard-course">
+              <Card className="h-100 shadow-sm">
+                <Link
+                  href={`/Courses/${course._id}/Home`}
+                  className="wd-dashboard-course-link text-decoration-none text-dark"
+                >
+                  <Image
+                    src={`/images/${(course as any).image || "reactjs.jpg"}`}
+                    alt={course.name}
+                    width={300}
+                    height={180}
+                    className="card-img-top"
+                    style={{ objectFit: "cover" }}
+                  />
+                  <Card.Body>
+                    <Card.Title className="fw-bold text-truncate">
+                      {course.name}
+                    </Card.Title>
+                    <Card.Text
+                      className="text-muted overflow-hidden"
+                      style={{ height: "70px" }}
+                    >
+                      {course.description}
+                    </Card.Text>
+                    <Button variant="primary">Go</Button>
+                  </Card.Body>
+                </Link>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </div>
     </div>
   );
 }

@@ -1,35 +1,79 @@
 "use client";
+
 import { AiOutlineDashboard } from "react-icons/ai";
 import { IoCalendarOutline } from "react-icons/io5";
-import { LiaBookSolid, LiaCogSolid } from "react-icons/lia";
+import { LiaBookSolid } from "react-icons/lia";
 import { FaInbox, FaRegCircleUser } from "react-icons/fa6";
-import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { FiHelpCircle } from "react-icons/fi";
 import { MdVideoLibrary, MdPeopleAlt } from "react-icons/md";
 import { GoClock } from "react-icons/go";
+import { CiSettings } from "react-icons/ci";
+import { ListGroup, ListGroupItem } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-
 
 export default function KambazNavigation() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const isDashboard = pathname === "/Dashboard" && !searchParams.get("tab");
-  const isCourses = pathname === "/Dashboard" && searchParams.get("tab") === "courses";
+  const tab = searchParams.get("tab");
 
-
-  const getItemClasses = (path: string, isAccount = false) => {
-    if (isAccount) return "border-0 bg-black text-center text-white";
-    return `border-0 text-center ${pathname === path ? "bg-white text-danger" : "bg-black text-white"
-      }`;
-  };
-
-  const getIconColor = (path: string, isAccount = false) => {
-    if (isAccount) return "text-white";
-    return "text-danger";
-  };
+  const links = [
+    {
+      label: "Dashboard",
+      path: "/Dashboard",
+      icon: AiOutlineDashboard,
+      isActive: () => pathname === "/Dashboard" && !tab,
+    },
+    {
+      label: "Courses",
+      path: "/Dashboard?tab=courses",
+      icon: LiaBookSolid,
+      isActive: () => pathname === "/Dashboard" && tab === "courses",
+    },
+    {
+      label: "Labs",
+      path: "/Labs",
+      icon: CiSettings,
+      isActive: () => pathname === "/Labs",
+    },
+    {
+      label: "People",
+      path: "/People",
+      icon: MdPeopleAlt,
+      isActive: () => pathname === "/People",
+    },
+    {
+      label: "Calendar",
+      path: "/Calendar",
+      icon: IoCalendarOutline,
+      isActive: () => pathname === "/Calendar",
+    },
+    {
+      label: "Inbox",
+      path: "/Inbox",
+      icon: FaInbox,
+      isActive: () => pathname === "/Inbox",
+    },
+    {
+      label: "History",
+      path: "/History",
+      icon: GoClock,
+      isActive: () => pathname === "/History",
+    },
+    {
+      label: "Studio",
+      path: "/Studio",
+      icon: MdVideoLibrary,
+      isActive: () => pathname === "/Studio",
+    },
+    {
+      label: "Help",
+      path: "/Help",
+      icon: FiHelpCircle,
+      isActive: () => pathname === "/Help",
+    },
+  ];
 
   return (
     <ListGroup
@@ -48,108 +92,37 @@ export default function KambazNavigation() {
         <img src="/images/NEU.svg" width="75px" alt="Northeastern University" />
       </ListGroupItem>
 
-      {/* account */}
+      {/* account as first dynamic link */}
       <ListGroupItem
-        className={`border-0 text-center ${pathname.startsWith("/Account") ? "bg-white" : "bg-black"
-          }`}
+        className={`border-0 text-center ${pathname.startsWith("/Account") ? "bg-white" : "bg-black"}`}
       >
-        <Link
-          href="/Account"
-          className={`text-decoration-none ${pathname.startsWith("/Account") ? "text-danger" : "text-white"
-            }`}
-        >
-          <FaRegCircleUser
-            className={`fs-3 ${pathname.startsWith("/Account") ? "text-danger" : "text-danger"
-              }`}
-          />
+        <Link href="/Account" className="text-decoration-none">
+          <FaRegCircleUser className="fs-3 text-danger" />
           <br />
-          Account
+          <span className={pathname.startsWith("/Account") ? "text-danger" : "text-white"}>
+            Account
+          </span>
         </Link>
       </ListGroupItem>
 
-      {/* dashboard */}
-      <ListGroupItem className={`border-0 text-center ${isDashboard ? "bg-white" : "bg-black"}`}>
-        <Link
-          href="/Dashboard"
-          className={`text-decoration-none ${isDashboard ? "text-danger" : "text-white"}`}
-        >
-          <AiOutlineDashboard className="fs-4 text-danger" />
-          <br />
-          Dashboard
-        </Link>
-      </ListGroupItem>
-
-      {/* courses */}
-      <ListGroupItem className={`border-0 text-center ${isCourses ? "bg-white" : "bg-black"}`}>
-        <Link
-          href="/Dashboard?tab=courses"
-          className={`text-decoration-none ${isCourses ? "text-danger" : "text-white"}`}
-        >
-          <LiaBookSolid className="fs-4 text-danger" />
-          <br />
-          Courses
-        </Link>
-      </ListGroupItem>
-
-      {/* people */}
-      <ListGroupItem className={getItemClasses("/People")}>
-        <Link href="/People" className={`text-decoration-none ${pathname === "/People" ?
-          "text-danger" : "text-white"}`}>
-          <MdPeopleAlt className={`fs-4 ${getIconColor("/People")}`} />
-          <br />
-          People
-        </Link>
-      </ListGroupItem>
-
-      {/* calendar */}
-      <ListGroupItem className={getItemClasses("/Calendar")}>
-        <Link href="/Calendar" className={`text-decoration-none ${pathname === "/Calendar" ?
-          "text-danger" : "text-white"}`}>
-          <IoCalendarOutline className={`fs-4 ${getIconColor("/Calendar")}`} />
-          <br />
-          Calendar
-        </Link>
-      </ListGroupItem>
-
-      {/* inbox */}
-      <ListGroupItem className={getItemClasses("/Inbox")}>
-        <Link href="/Inbox" className={`text-decoration-none ${pathname === "/Inbox" ?
-          "text-danger" : "text-white"}`}>
-          <FaInbox className={`fs-4 ${getIconColor("/Inbox")}`} />
-          <br />
-          Inbox
-        </Link>
-      </ListGroupItem>
-
-      {/* history */}
-      <ListGroupItem className={getItemClasses("/History")}>
-        <Link href="/History" className={`text-decoration-none ${pathname === "/History" ?
-          "text-danger" : "text-white"}`}>
-          <GoClock className={`fs-4 ${getIconColor("/History")}`} />
-          <br />
-          History
-        </Link>
-      </ListGroupItem>
-
-      {/* studio */}
-      <ListGroupItem className={getItemClasses("/Studio")}>
-        <Link href="/Studio" className={`text-decoration-none ${pathname === "/Studio" ?
-          "text-danger" : "text-white"}`}>
-          <MdVideoLibrary className={`fs-4 ${getIconColor("/Studio")}`} />
-          <br />
-          Studio
-        </Link>
-      </ListGroupItem>
-
-      {/* help */}
-      <ListGroupItem className={getItemClasses("/Help")}>
-        <Link href="/Help" className={`text-decoration-none ${pathname === "/Help" ?
-          "text-danger" : "text-white"}`}>
-          <FiHelpCircle className={`fs-4 ${getIconColor("/Help")}`} />
-          <br />
-          Help
-        </Link>
-      </ListGroupItem>
+      {/* map over all other links */}
+      {links.map((link) => {
+        const active = link.isActive();
+        return (
+          <ListGroupItem
+            key={link.label}
+            as={Link}
+            href={link.path}
+            className={`border-0 text-center ${active ? "bg-white" : "bg-black"}`}
+          >
+            <link.icon className="fs-4 text-danger" />
+            <br />
+            <span className={active ? "text-danger" : "text-white"}>
+              {link.label}
+            </span>
+          </ListGroupItem>
+        );
+      })}
     </ListGroup>
   );
 }
