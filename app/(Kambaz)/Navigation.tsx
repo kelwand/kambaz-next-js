@@ -20,7 +20,6 @@ export default function KambazNavigation() {
   const [isClient, setIsClient] = useState(false);
   const tab = searchParams.get("tab");
 
-  // ✅ This ensures rendering happens only after hydration
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -82,7 +81,6 @@ export default function KambazNavigation() {
     },
   ];
 
-  // 🧠 Avoid mismatch by waiting until client mount
   if (!isClient) return null;
 
   return (

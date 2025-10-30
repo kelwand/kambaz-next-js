@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
-import { Assignment, addAssignment, updateAssignment } from "../reducer"; // <-- fixed path
+import { Assignment, addAssignment, updateAssignment } from "../reducer";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams() as { cid: string; aid: string };

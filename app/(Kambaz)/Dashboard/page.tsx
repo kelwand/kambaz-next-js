@@ -27,7 +27,6 @@ export default function Dashboard() {
 
   const isFaculty = currentUser?.role === "FACULTY";
 
-  // Local state
   const [course, setCourse] = useState<any>({
     _id: "0",
     name: "New Course",
@@ -41,7 +40,6 @@ export default function Dashboard() {
   const [userEnrollments, setUserEnrollments] = useState<string[]>([]);
   const [showAllCourses, setShowAllCourses] = useState(false);
 
-  // Redirect if not signed in & initialize enrollments
   useEffect(() => {
     if (currentUser === undefined) return;
     if (!currentUser) router.push("/Account/Signin");
@@ -55,10 +53,8 @@ export default function Dashboard() {
 
   if (currentUser === undefined || !currentUser) return null;
 
-  // Toggle view between all courses and enrolled courses
   const toggleEnrollmentView = () => setShowAllCourses(!showAllCourses);
 
-  // Enroll/Unenroll a course
   const handleEnroll = (courseId: string) => {
     if (userEnrollments.includes(courseId)) {
       setUserEnrollments(userEnrollments.filter((id) => id !== courseId));
