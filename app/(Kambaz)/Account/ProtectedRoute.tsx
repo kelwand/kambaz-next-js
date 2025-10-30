@@ -2,11 +2,11 @@
 import { useSelector } from "react-redux";
 import { redirect } from "next/navigation";
 
-export default function CoursesPage() {
+export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
 
-  if (currentUser === undefined) return null;
-  if (!currentUser) redirect("/Account/Signin");
-
-  redirect("/Dashboard");
+  if (!currentUser) {
+    redirect("/Account/Signin");
+  }
+  return <>{children}</>;
 }

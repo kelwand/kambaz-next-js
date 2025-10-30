@@ -9,14 +9,21 @@ import { MdVideoLibrary, MdPeopleAlt } from "react-icons/md";
 import { GoClock } from "react-icons/go";
 import { CiSettings } from "react-icons/ci";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function KambazNavigation() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [isClient, setIsClient] = useState(false);
   const tab = searchParams.get("tab");
+
+  // ✅ This ensures rendering happens only after hydration
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const links = [
     {
@@ -75,6 +82,9 @@ export default function KambazNavigation() {
     },
   ];
 
+  // 🧠 Avoid mismatch by waiting until client mount
+  if (!isClient) return null;
+
   return (
     <ListGroup
       id="wd-kambaz-navigation"
@@ -92,20 +102,26 @@ export default function KambazNavigation() {
         <img src="/images/NEU.svg" width="75px" alt="Northeastern University" />
       </ListGroupItem>
 
-      {/* account as first dynamic link */}
+      {/* Account link */}
       <ListGroupItem
-        className={`border-0 text-center ${pathname.startsWith("/Account") ? "bg-white" : "bg-black"}`}
+        className={`border-0 text-center ${
+          pathname?.startsWith("/Account") ? "bg-white" : "bg-black"
+        }`}
       >
         <Link href="/Account" className="text-decoration-none">
           <FaRegCircleUser className="fs-3 text-danger" />
           <br />
-          <span className={pathname.startsWith("/Account") ? "text-danger" : "text-white"}>
+          <span
+            className={
+              pathname?.startsWith("/Account") ? "text-danger" : "text-white"
+            }
+          >
             Account
           </span>
         </Link>
       </ListGroupItem>
 
-      {/* map over all other links */}
+      {/* Dynamic links */}
       {links.map((link) => {
         const active = link.isActive();
         return (
@@ -113,7 +129,9 @@ export default function KambazNavigation() {
             key={link.label}
             as={Link}
             href={link.path}
-            className={`border-0 text-center ${active ? "bg-white" : "bg-black"}`}
+            className={`border-0 text-center ${
+              active ? "bg-white" : "bg-black"
+            }`}
           >
             <link.icon className="fs-4 text-danger" />
             <br />
