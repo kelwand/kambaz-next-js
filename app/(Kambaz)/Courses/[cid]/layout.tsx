@@ -6,11 +6,28 @@ import Breadcrumb from "./Breadcrumb";
 import { FaAlignJustify } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useParams } from "next/navigation";
+import type { RootState } from "../../store"; 
 
-export default function CoursesLayout({ children }: { children: ReactNode }) {
+interface Course {
+  _id: string;
+  name: string;
+  description?: string;
+  image?: string;
+  number?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+interface CoursesLayoutProps {
+  children: ReactNode;
+}
+
+export default function CoursesLayout({ children }: CoursesLayoutProps) {
   const { cid } = useParams();
-  const { courses } = useSelector((state: any) => state.coursesReducer);
-  const course = courses.find((course: any) => course._id === cid);
+
+  const courses = useSelector((state: RootState) => state.coursesReducer.courses) as Course[];
+
+  const course = courses.find((c: Course) => c._id === cid);
 
   const [showSidebar, setShowSidebar] = useState(true);
 

@@ -24,7 +24,7 @@ interface NavLink {
 export default function KambazNavigation() {
   const pathname = usePathname() || "";
   const searchParams = useSearchParams();
-  const tab = searchParams?.get("tab") || "";
+  const tab: string = searchParams?.get("tab") || "";
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -32,60 +32,15 @@ export default function KambazNavigation() {
   }, []);
 
   const links: NavLink[] = [
-    {
-      label: "Dashboard",
-      path: "/Dashboard",
-      icon: AiOutlineDashboard,
-      isActive: () => pathname === "/Dashboard" && !tab,
-    },
-    {
-      label: "Courses",
-      path: "/Dashboard?tab=courses",
-      icon: LiaBookSolid,
-      isActive: () => pathname === "/Dashboard" && tab === "courses",
-    },
-    {
-      label: "Labs",
-      path: "/Labs",
-      icon: CiSettings,
-      isActive: () => pathname === "/Labs",
-    },
-    {
-      label: "People",
-      path: "/People",
-      icon: MdPeopleAlt,
-      isActive: () => pathname === "/People",
-    },
-    {
-      label: "Calendar",
-      path: "/Calendar",
-      icon: IoCalendarOutline,
-      isActive: () => pathname === "/Calendar",
-    },
-    {
-      label: "Inbox",
-      path: "/Inbox",
-      icon: FaInbox,
-      isActive: () => pathname === "/Inbox",
-    },
-    {
-      label: "History",
-      path: "/History",
-      icon: GoClock,
-      isActive: () => pathname === "/History",
-    },
-    {
-      label: "Studio",
-      path: "/Studio",
-      icon: MdVideoLibrary,
-      isActive: () => pathname === "/Studio",
-    },
-    {
-      label: "Help",
-      path: "/Help",
-      icon: FiHelpCircle,
-      isActive: () => pathname === "/Help",
-    },
+    { label: "Dashboard", path: "/Dashboard", icon: AiOutlineDashboard, isActive: () => pathname === "/Dashboard" && !tab },
+    { label: "Courses", path: "/Dashboard?tab=courses", icon: LiaBookSolid, isActive: () => pathname === "/Dashboard" && tab === "courses" },
+    { label: "Labs", path: "/Labs", icon: CiSettings, isActive: () => pathname === "/Labs" },
+    { label: "People", path: "/People", icon: MdPeopleAlt, isActive: () => pathname === "/People" },
+    { label: "Calendar", path: "/Calendar", icon: IoCalendarOutline, isActive: () => pathname === "/Calendar" },
+    { label: "Inbox", path: "/Inbox", icon: FaInbox, isActive: () => pathname === "/Inbox" },
+    { label: "History", path: "/History", icon: GoClock, isActive: () => pathname === "/History" },
+    { label: "Studio", path: "/Studio", icon: MdVideoLibrary, isActive: () => pathname === "/Studio" },
+    { label: "Help", path: "/Help", icon: FiHelpCircle, isActive: () => pathname === "/Help" },
   ];
 
   if (!isClient) return null;
@@ -96,7 +51,6 @@ export default function KambazNavigation() {
       className="rounded-0 position-fixed top-0 start-0 d-none d-md-block z-2 bg-black"
       style={{ width: "110px", height: "100vh", overflowY: "auto" }}
     >
-      {/* NEU logo */}
       <ListGroupItem
         className="bg-black border-0 text-center"
         as="a"
@@ -104,14 +58,9 @@ export default function KambazNavigation() {
         href="https://www.northeastern.edu/"
         id="wd-neu-link"
       >
-        <img
-          src="/images/NEU.svg"
-          width="75px"
-          alt="Northeastern University"
-        />
+        <img src="/images/NEU.svg" width="75px" alt="Northeastern University" />
       </ListGroupItem>
 
-      {/* Account link */}
       <ListGroupItem
         className={`border-0 text-center ${
           pathname.startsWith("/Account") ? "bg-white" : "bg-black"
@@ -120,33 +69,24 @@ export default function KambazNavigation() {
         <Link href="/Account" className="text-decoration-none">
           <FaRegCircleUser className="fs-3 text-danger" />
           <br />
-          <span
-            className={
-              pathname.startsWith("/Account") ? "text-danger" : "text-white"
-            }
-          >
+          <span className={pathname.startsWith("/Account") ? "text-danger" : "text-white"}>
             Account
           </span>
         </Link>
       </ListGroupItem>
 
-      {/* Dynamic links */}
-      {links.map((link) => {
+      {links.map((link: NavLink) => {
         const active = link.isActive();
         return (
           <ListGroupItem
             key={link.label}
             as={Link}
             href={link.path}
-            className={`border-0 text-center ${
-              active ? "bg-white" : "bg-black"
-            }`}
+            className={`border-0 text-center ${active ? "bg-white" : "bg-black"}`}
           >
             <link.icon className="fs-4 text-danger" />
             <br />
-            <span className={active ? "text-danger" : "text-white"}>
-              {link.label}
-            </span>
+            <span className={active ? "text-danger" : "text-white"}>{link.label}</span>
           </ListGroupItem>
         );
       })}
