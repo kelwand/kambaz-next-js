@@ -9,13 +9,34 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addModule, deleteModule, updateModule, editModule } from "./reducer";
+import { RootState } from "../../../store";
+
+interface Lesson {
+  _id: string;
+  name: string;
+  description?: string;
+}
+
+interface Module {
+  _id: string;
+  name: string;
+  course: string;
+  editing?: boolean;
+  lessons: Lesson[]; 
+}
+
+interface User {
+  _id: string;
+  username: string;
+  role: "USER" | "ADMIN" | "FACULTY" | "STUDENT";
+}
 
 export default function Modules() {
-  const { cid } = useParams();
+  const { cid } = useParams() as { cid: string };
   const [moduleName, setModuleName] = useState("");
-  const { modules } = useSelector((state: any) => state.modulesReducer); 
+  const modules: Module[] = useSelector((state: RootState) => state.modulesReducer.modules);
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer) as { currentUser: User | null };
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   const isFaculty = currentUser?.role === "FACULTY";
 
@@ -25,6 +46,7 @@ export default function Modules() {
         moduleName={moduleName}
         setModuleName={setModuleName}
         addModule={() => {
+          if (!cid) return;
           dispatch(addModule({ name: moduleName, course: cid }));
           setModuleName("");
         }}
@@ -34,8 +56,8 @@ export default function Modules() {
 
       <ListGroup className="rounded-0" id="wd-modules">
         {modules
-          .filter((module: any) => module.course === cid)
-          .map((module: any) => (
+          .filter((module) => module.course === cid)
+          .map((module) => (
             <ListGroupItem key={module._id} className="wd-module p-0 mb-5 fs-5 border-gray">
               <div className="wd-title p-3 ps-2 bg-secondary text-white d-flex align-items-center justify-content-between">
                 <div>
@@ -64,7 +86,7 @@ export default function Modules() {
 
               {module.lessons && (
                 <ListGroup className="wd-lessons rounded-0">
-                  {module.lessons.map((lesson: any) => (
+                  {module.lessons.map((lesson) => (
                     <ListGroupItem key={lesson._id} className="wd-lesson p-3 ps-1">
                       <BsGripVertical className="me-2 fs-3" />
                       {lesson.name}

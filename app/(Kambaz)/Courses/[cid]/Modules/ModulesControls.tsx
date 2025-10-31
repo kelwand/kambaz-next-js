@@ -6,6 +6,13 @@ import GreenCheckmark from "./GreenCheckmark";
 import ModuleEditor from "./ModuleEditor";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
+
+interface User {
+  _id: string;
+  username: string;
+  role: "USER" | "ADMIN" | "FACULTY" | "STUDENT";
+}
 
 export default function ModulesControls({
   moduleName,
@@ -20,7 +27,7 @@ export default function ModulesControls({
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer) as { currentUser: User | null };
   const isFaculty = currentUser?.role === "FACULTY";
 
   return (

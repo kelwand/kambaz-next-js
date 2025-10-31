@@ -1,21 +1,29 @@
 "use client";
 
 import { ListGroup, ListGroupItem, Button, InputGroup, Form } from "react-bootstrap";
-import { FaPlus, FaSearch, FaCheckCircle, FaTrash } from "react-icons/fa";
+import { FaPlus, FaSearch, FaTrash } from "react-icons/fa";
 import { PiNotePencilLight } from "react-icons/pi";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { Assignment, deleteAssignment } from "./reducer";
+import { RootState } from "../../../store";
+
+interface User {
+  _id: string;
+  username: string;
+  role: "USER" | "ADMIN" | "FACULTY" | "STUDENT";
+}
 
 export default function Assignments() {
-  const { cid } = useParams();
+  const { cid } = useParams() as { cid: string };
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
+
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer) as { currentUser: User | null };
   const isFaculty = currentUser?.role === "FACULTY";
 
-  const assignments: Assignment[] = useSelector((state: any) =>
-    state.assignmentsReducer.assignments.filter((a: Assignment) => a.course === cid)
+  const assignments: Assignment[] = useSelector((state: RootState) =>
+    state.assignmentsReducer.assignments.filter((a) => a.course === cid)
   );
 
   const handleDelete = (id: string) => {

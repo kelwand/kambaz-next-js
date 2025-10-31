@@ -1,47 +1,44 @@
-"use client";
-
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { courses } from "../Database";
+import { v4 as uuidv4 } from "uuid";
 
-interface DashboardState {
-  courses: any[];
-  enrollments: string[]; 
-  showAll: boolean;
+export interface Course {
+  _id: string;
+  name: string;
+  description?: string;
+  image?: string;
 }
 
-const initialState: DashboardState = {
-  courses: [],
-  enrollments: [],
-  showAll: false,
+interface CoursesState {
+  courses: Course[];
+}
+
+const initialState: CoursesState = {
+  courses: courses as Course[],
 };
 
-const dashboardSlice = createSlice({
-  name: "dashboard",
+const coursesSlice = createSlice({
+  name: "courses",
   initialState,
   reducers: {
-    setCourses: (state, action: PayloadAction<any[]>) => {
-      state.courses = action.payload;
+    // add course (reducer auto-generates _id)
+    addNewCourse: (state, { payload }: PayloadAction<Omit<Course, "_id">>) => {
+      const newCourse: Course = { ...payload, _id: uuidv4() };
+      state.courses = [...state.courses, newCourse];
     },
-    toggleEnrollments: (state) => {
-      state.showAll = !state.showAll;
+
+    // delete course
+    deleteCourse: (state, { payload }: PayloadAction<string>) => {
+      state.courses = state.courses.filter((course) => course._id !== payload);
     },
-    enrollCourse: (state, action: PayloadAction<string>) => {
-      if (!state.enrollments.includes(action.payload)) {
-        state.enrollments.push(action.payload);
-      }
-    },
-    unenrollCourse: (state, action: PayloadAction<string>) => {
-      state.enrollments = state.enrollments.filter(
-        (id) => id !== action.payload
+    
+    updateCourse: (state, { payload }: PayloadAction<Course>) => {
+      state.courses = state.courses.map((course) =>
+        course._id === payload._id ? payload : course
       );
     },
   },
 });
 
-export const {
-  setCourses,
-  toggleEnrollments,
-  enrollCourse,
-  unenrollCourse,
-} = dashboardSlice.actions;
-
-export default dashboardSlice.reducer;
+export const { addNewCourse, deleteCourse, updateCourse } = coursesSlice.actions;
+export default coursesSlice.reducer;

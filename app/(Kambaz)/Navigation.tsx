@@ -14,17 +14,24 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
+interface NavLink {
+  label: string;
+  path: string;
+  icon: React.ComponentType<{ className?: string }>;
+  isActive: () => boolean;
+}
+
 export default function KambazNavigation() {
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
   const searchParams = useSearchParams();
+  const tab = searchParams?.get("tab") || "";
   const [isClient, setIsClient] = useState(false);
-  const tab = searchParams.get("tab");
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  const links = [
+  const links: NavLink[] = [
     {
       label: "Dashboard",
       path: "/Dashboard",
@@ -97,13 +104,17 @@ export default function KambazNavigation() {
         href="https://www.northeastern.edu/"
         id="wd-neu-link"
       >
-        <img src="/images/NEU.svg" width="75px" alt="Northeastern University" />
+        <img
+          src="/images/NEU.svg"
+          width="75px"
+          alt="Northeastern University"
+        />
       </ListGroupItem>
 
       {/* Account link */}
       <ListGroupItem
         className={`border-0 text-center ${
-          pathname?.startsWith("/Account") ? "bg-white" : "bg-black"
+          pathname.startsWith("/Account") ? "bg-white" : "bg-black"
         }`}
       >
         <Link href="/Account" className="text-decoration-none">
@@ -111,7 +122,7 @@ export default function KambazNavigation() {
           <br />
           <span
             className={
-              pathname?.startsWith("/Account") ? "text-danger" : "text-white"
+              pathname.startsWith("/Account") ? "text-danger" : "text-white"
             }
           >
             Account

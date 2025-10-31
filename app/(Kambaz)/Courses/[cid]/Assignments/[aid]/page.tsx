@@ -4,13 +4,27 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { Assignment, addAssignment, updateAssignment } from "../reducer";
+import { RootState } from "../../../../store";
+
+interface User {
+  _id: string;
+  username: string;
+  password: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  dob?: string;
+  role: "USER" | "ADMIN" | "FACULTY" | "STUDENT";
+}
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams() as { cid: string; aid: string };
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer) as { currentUser: User | null };
+  
   const assignments: Assignment[] = useSelector(
-    (state: any) => state.assignmentsReducer.assignments
+    (state: RootState) => state.assignmentsReducer.assignments
   );
 
   const isFaculty = currentUser?.role === "FACULTY";
@@ -52,7 +66,7 @@ export default function AssignmentEditor() {
         defaultValue={assignment?.description || ""}
         disabled={!isFaculty}
         className="form-control mb-3"
-      ></textarea>
+      />
 
       <table style={{ width: "100%" }}>
         <tbody>
@@ -103,7 +117,7 @@ export default function AssignmentEditor() {
               <input
                 id="wd-available-until"
                 type="date"
-                defaultValue={(assignment as any)?.until || ""}
+                defaultValue={assignment?.until || ""}
                 disabled={!isFaculty}
                 className="form-control mb-2"
               />

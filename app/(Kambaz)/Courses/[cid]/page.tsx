@@ -3,9 +3,16 @@
 import { useSelector } from "react-redux";
 import { redirect } from "next/navigation";
 import * as db from "../../Database";
+import { RootState } from "../../store"; 
+
+interface User {
+  _id: string;
+  username: string;
+  role: "USER" | "ADMIN" | "FACULTY" | "STUDENT";
+}
 
 export default function CoursePage({ params }: { params: { cid: string } }) {
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer) as { currentUser: User | null };
   const { cid } = params;
 
   if (currentUser === undefined) return null;

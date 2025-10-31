@@ -10,24 +10,42 @@ import { addNewCourse, deleteCourse, updateCourse } from "../Courses/reducer";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import * as db from "../Database";
+import type { RootState, AppDispatch } from "../store";
 
+// -------- TYPES -------- //
 interface Course {
   _id: string;
   name: string;
   description?: string;
   image?: string;
+  number?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
-export default function Dashboard() {
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { courses } = useSelector((state: any) => state.coursesReducer) as { courses: Course[] };
-  const { enrollments } = db;
+interface User {
+  _id: string;
+  role: string;
+  [key: string]: unknown;
+}
 
+// -------- COMPONENT -------- //
+export default function Dashboard() {
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+
+  const currentUser = useSelector(
+    (state: RootState) => state.accountReducer.currentUser
+  ) as User | null | undefined;
+
+  const courses = useSelector(
+    (state: RootState) => state.coursesReducer.courses
+  ) as Course[];
+
+  const { enrollments } = db;
   const isFaculty = currentUser?.role === "FACULTY";
 
-  const [course, setCourse] = useState<any>({
+  const [course, setCourse] = useState<Course>({
     _id: "0",
     name: "New Course",
     number: "New Number",
@@ -42,25 +60,44 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (currentUser === undefined) return;
-    if (!currentUser) router.push("/Account/Signin");
-    else {
-      const myEnrollments = enrollments
-        .filter((e) => e.user === currentUser._id)
-        .map((e) => e.course);
-      setUserEnrollments(myEnrollments);
+    if (!currentUser) {
+      router.push("/Account/Signin");
+      return;
     }
-  }, [currentUser, router]);
+
+    const myEnrollments = enrollments
+      .filter(
+        (e: { user: string; course: string }) => e.user === currentUser._id
+      )
+      .map((e: { course: string }) => e.course);
+    setUserEnrollments(myEnrollments);
+  }, [currentUser, router, enrollments]);
 
   if (currentUser === undefined || !currentUser) return null;
 
   const toggleEnrollmentView = () => setShowAllCourses(!showAllCourses);
 
   const handleEnroll = (courseId: string) => {
-    if (userEnrollments.includes(courseId)) {
-      setUserEnrollments(userEnrollments.filter((id) => id !== courseId));
-    } else {
-      setUserEnrollments([...userEnrollments, courseId]);
-    }
+    setUserEnrollments((prev) =>
+      prev.includes(courseId)
+        ? prev.filter((id) => id !== courseId)
+        : [...prev, courseId]
+    );
+  };
+
+  const handleAddCourse = () => {
+    // ✅ safely cast to match the reducer type
+    const newCourse = {
+      name: course.name,
+      description: course.description,
+      number: course.number,
+      startDate: course.startDate,
+      endDate: course.endDate,
+      image: course.image,
+    } as Omit<Course, "_id">;
+
+    // dispatch addNewCourse with the ID separately
+    dispatch(addNewCourse({ ...newCourse, _id: uuidv4() } as Course));
   };
 
   const displayedCourses = showAllCourses
@@ -69,7 +106,7 @@ export default function Dashboard() {
 
   return (
     <div id="wd-dashboard" className="p-3">
-      {/* Header with persistent blue Enrollments button */}
+      {/* Header */}
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h1 id="wd-dashboard-title">Dashboard</h1>
         {!isFaculty && (
@@ -81,14 +118,14 @@ export default function Dashboard() {
 
       <hr />
 
-      {/* Faculty: Add/Update Courses */}
+      {/* Faculty Add/Update */}
       {isFaculty && (
         <>
           <h5>
             New Course
             <button
               className="btn btn-primary float-end"
-              onClick={() => dispatch(addNewCourse({ ...course, _id: uuidv4() }))}
+              onClick={handleAddCourse}
             >
               Add
             </button>
@@ -141,7 +178,9 @@ export default function Dashboard() {
                     style={{ objectFit: "cover" }}
                   />
                   <Card.Body>
-                    <Card.Title className="fw-bold text-truncate">{course.name}</Card.Title>
+                    <Card.Title className="fw-bold text-truncate">
+                      {course.name}
+                    </Card.Title>
                     <Card.Text
                       className="text-muted overflow-hidden"
                       style={{ height: "70px" }}
@@ -149,7 +188,6 @@ export default function Dashboard() {
                       {course.description}
                     </Card.Text>
 
-                    {/* Faculty buttons */}
                     {isFaculty ? (
                       <>
                         <Link href={`/Courses/${course._id}/Home`} passHref>
@@ -170,7 +208,6 @@ export default function Dashboard() {
                       </>
                     ) : (
                       <>
-                        {/* Enroll/Unenroll buttons */}
                         <Button
                           variant={isEnrolled ? "danger" : "success"}
                           onClick={() => handleEnroll(course._id)}

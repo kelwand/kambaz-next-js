@@ -2,23 +2,41 @@
 
 import Link from "next/link";
 import { FormControl, Button } from "react-bootstrap";
-import { redirect } from "next/dist/client/components/navigation";
+import { redirect } from "next/navigation";
 import { setCurrentUser } from "../reducer";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 import * as db from "../../Database";
+import { AppDispatch } from "../../store"; 
 
+interface Credentials {
+  username: string;
+  password: string;
+}
+
+interface User {
+  _id: string;
+  username: string;
+  password: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  role?: string;
+}
 
 export default function Signin() {
-  const [credentials, setCredentials] = useState<any>({});
-  const dispatch = useDispatch();
+  const [credentials, setCredentials] = useState<Credentials>({ username: "", password: "" });
+  const dispatch = useDispatch<AppDispatch>();
+
   const signin = () => {
-    const user = db.users.find(
-      (u: any) =>
+    const user: User | undefined = db.users.find(
+      (u: User) =>
         u.username === credentials.username &&
         u.password === credentials.password
     );
+
     if (!user) return;
+
     dispatch(setCurrentUser(user));
     redirect("/Dashboard");
   };
@@ -26,23 +44,34 @@ export default function Signin() {
   return (
     <div id="wd-signin-screen">
       <h1>Signin</h1>
-      <FormControl defaultValue={credentials.username}
-             onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
-      id="wd-username"
+      <FormControl
+        id="wd-username"
         placeholder="username"
-        className="mb-1" />
+        className="mb-1"
+        value={credentials.username}
+        onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+      />
 
-      <FormControl defaultValue={credentials.password}
-             onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-      id="wd-password"
-        placeholder="password" type="password"
-        className="mb-1" />
-       < Button onClick={signin}
-       id="wd-signin-btn"
-        className="btn btn-primary w-100 mb-1">
-        Signin </Button>
-      <Link id="wd-signup-link" href="/Account/Signup">Signup</Link>
+      <FormControl
+        id="wd-password"
+        placeholder="password"
+        type="password"
+        className="mb-1"
+        value={credentials.password}
+        onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+      />
+
+      <Button
+        onClick={signin}
+        id="wd-signin-btn"
+        className="btn btn-primary w-100 mb-1"
+      >
+        Signin
+      </Button>
+
+      <Link id="wd-signup-link" href="/Account/Signup">
+        Signup
+      </Link>
     </div>
   );
 }
-
