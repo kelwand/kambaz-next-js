@@ -1,6 +1,6 @@
-import HelloRedux from "./HelloRedux/page";
-import CounterRedux from "./CounterRedux/page";
-import AddRedux from "./AddRedux/page";
+import HelloRedux from "./HelloRedux";
+import CounterRedux from "./CounterRedux";
+import AddRedux from "./AddRedux";
 
 export default function ReduxExamples() {
   return(
