@@ -21,17 +21,15 @@ const coursesSlice = createSlice({
   name: "courses",
   initialState,
   reducers: {
-    // add course (reducer auto-generates _id)
     addNewCourse: (state, { payload }: PayloadAction<Omit<Course, "_id">>) => {
       const newCourse: Course = { ...payload, _id: uuidv4() };
       state.courses = [...state.courses, newCourse];
     },
 
-    // delete course
     deleteCourse: (state, { payload }: PayloadAction<string>) => {
       state.courses = state.courses.filter((course) => course._id !== payload);
     },
-    
+
     updateCourse: (state, { payload }: PayloadAction<Course>) => {
       state.courses = state.courses.map((course) =>
         course._id === payload._id ? payload : course

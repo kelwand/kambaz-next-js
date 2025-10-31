@@ -12,7 +12,6 @@ import { v4 as uuidv4 } from "uuid";
 import * as db from "../Database";
 import type { RootState, AppDispatch } from "../store";
 
-// -------- TYPES -------- //
 interface Course {
   _id: string;
   name: string;
@@ -29,7 +28,6 @@ interface User {
   [key: string]: unknown;
 }
 
-// -------- COMPONENT -------- //
 export default function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
@@ -86,7 +84,6 @@ export default function Dashboard() {
   };
 
   const handleAddCourse = () => {
-    // ✅ safely cast to match the reducer type
     const newCourse = {
       name: course.name,
       description: course.description,
@@ -96,7 +93,6 @@ export default function Dashboard() {
       image: course.image,
     } as Omit<Course, "_id">;
 
-    // dispatch addNewCourse with the ID separately
     dispatch(addNewCourse({ ...newCourse, _id: uuidv4() } as Course));
   };
 
@@ -106,7 +102,6 @@ export default function Dashboard() {
 
   return (
     <div id="wd-dashboard" className="p-3">
-      {/* Header */}
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h1 id="wd-dashboard-title">Dashboard</h1>
         {!isFaculty && (
@@ -118,7 +113,7 @@ export default function Dashboard() {
 
       <hr />
 
-      {/* Faculty Add/Update */}
+
       {isFaculty && (
         <>
           <h5>
