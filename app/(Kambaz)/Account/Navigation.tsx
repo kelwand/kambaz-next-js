@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Nav, NavItem, NavLink } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import type { RootState } from "../store"; 
+import { TypedUseSelectorHook, useSelector as useReduxSelector } from "react-redux";
+import type { RootState } from "../store";
 
 interface User {
   _id: string;
@@ -12,10 +12,10 @@ interface User {
   [key: string]: unknown;
 }
 
+const useSelector: TypedUseSelectorHook<RootState> = useReduxSelector;
+
 export default function AccountNavigation() {
-  const currentUser = useSelector(
-    (state: RootState) => state.accountReducer.currentUser
-  ) as User | null | undefined;
+  const currentUser = useSelector((state) => state.accountReducer.currentUser);
 
   const links = currentUser ? ["Profile"] : ["Signin", "Signup"];
   const pathname = usePathname();
@@ -36,3 +36,4 @@ export default function AccountNavigation() {
     </Nav>
   );
 }
+ 
