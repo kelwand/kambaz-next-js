@@ -1,11 +1,22 @@
 "use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Nav, NavItem, NavLink } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import type { RootState } from "../store"; 
+
+interface User {
+  _id: string;
+  role: string;
+  [key: string]: unknown;
+}
 
 export default function AccountNavigation() {
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const currentUser = useSelector(
+    (state: RootState) => state.accountReducer.currentUser
+  ) as User | null | undefined;
+
   const links = currentUser ? ["Profile"] : ["Signin", "Signup"];
   const pathname = usePathname();
 
@@ -15,7 +26,7 @@ export default function AccountNavigation() {
         <NavItem key={link}>
           <NavLink
             as={Link}
-            href={link}
+            href={`/${link.toLowerCase()}`}
             active={pathname.endsWith(link.toLowerCase())}
           >
             {link}
