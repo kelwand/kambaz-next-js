@@ -1,7 +1,7 @@
 "use client";
 import { useSelector } from "react-redux";
 import { redirect } from "next/navigation";
-import { RootState } from "../store";
+import { AccountState } from "../store";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -9,7 +9,7 @@ interface ProtectedRouteProps {
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const currentUser = useSelector(
-    (state: RootState) => state.accountReducer.currentUser
+    (state: AccountState) => state.accountReducer.currentUser
   );
 
   if (!currentUser) {

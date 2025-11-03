@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { Assignment, deleteAssignment } from "./reducer";
-import { RootState } from "../../../store";
+import { AccountState, AssignmentsState } from "../../../store";
 
 interface User {
   _id: string;
@@ -19,10 +19,10 @@ export default function Assignments() {
   const { cid } = useParams() as { cid: string };
   const dispatch = useDispatch();
 
-  const { currentUser } = useSelector((state: RootState) => state.accountReducer) as { currentUser: User | null };
+  const { currentUser } = useSelector((state: AccountState) => state.accountReducer) as { currentUser: User | null };
   const isFaculty = currentUser?.role === "FACULTY";
 
-  const assignments: Assignment[] = useSelector((state: RootState) =>
+  const assignments: Assignment[] = useSelector((state: AssignmentsState) =>
     state.assignmentsReducer.assignments.filter((a) => a.course === cid)
   );
 

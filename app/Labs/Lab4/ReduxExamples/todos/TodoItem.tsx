@@ -6,6 +6,9 @@ import { deleteTodo, setTodo } from "./todosReducer";
 
 export default function TodoItem({ todo }: { todo: { id: string; title: string } }) {
   const dispatch = useDispatch();
+  if (!todo) {
+    return null;
+  }
 
   return (
     <ListGroupItem key={todo.id}>

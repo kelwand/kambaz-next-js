@@ -10,7 +10,7 @@ import { addNewCourse, deleteCourse, updateCourse } from "../Courses/reducer";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import * as db from "../Database";
-import type { RootState, AppDispatch } from "../store";
+import type { AppDispatch, AccountState, CoursesState } from "../store";
 
 interface Course {
   _id: string;
@@ -33,11 +33,11 @@ export default function Dashboard() {
   const router = useRouter();
 
   const currentUser = useSelector(
-    (state: RootState) => state.accountReducer.currentUser
+    (state: AccountState) => state.accountReducer.currentUser
   ) as User | null | undefined;
 
   const courses = useSelector(
-    (state: RootState) => state.coursesReducer.courses
+    (state: CoursesState) => state.coursesReducer.courses
   ) as Course[];
 
   const { enrollments } = db;

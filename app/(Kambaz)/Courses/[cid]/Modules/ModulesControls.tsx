@@ -6,7 +6,7 @@ import GreenCheckmark from "./GreenCheckmark";
 import ModuleEditor from "./ModuleEditor";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../store";
+import { AccountState } from "../../../store";
 
 interface User {
   _id: string;
@@ -27,7 +27,7 @@ export default function ModulesControls({
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const { currentUser } = useSelector((state: RootState) => state.accountReducer) as { currentUser: User | null };
+  const { currentUser } = useSelector((state: AccountState) => state.accountReducer) as { currentUser: User | null };
   const isFaculty = currentUser?.role === "FACULTY";
 
   return (

@@ -1,10 +1,12 @@
 "use client";
 import { useSelector } from "react-redux";
-import type { RootState } from "../../store"; 
+import store from "../../store"; 
+
+export type RootState = ReturnType<typeof store.getState>;
 
 export default function HelloRedux() {
-  const message = useSelector((state: RootState) => state.helloReducer.message);
-
+  const { message } = useSelector((state: RootState) => state.helloReducer);
+  
   return (
     <div id="wd-hello-redux">
       <h3>Hello Redux</h3>

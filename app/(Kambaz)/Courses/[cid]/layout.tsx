@@ -6,7 +6,7 @@ import Breadcrumb from "./Breadcrumb";
 import { FaAlignJustify } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useParams } from "next/navigation";
-import type { RootState } from "../../store"; 
+import type { CoursesState } from "../../store"; 
 
 interface Course {
   _id: string;
@@ -25,7 +25,7 @@ interface CoursesLayoutProps {
 export default function CoursesLayout({ children }: CoursesLayoutProps) {
   const { cid } = useParams();
 
-  const courses = useSelector((state: RootState) => state.coursesReducer.courses) as Course[];
+  const courses = useSelector((state: CoursesState) => state.coursesReducer.courses) as Course[];
 
   const course = courses.find((c: Course) => c._id === cid);
 

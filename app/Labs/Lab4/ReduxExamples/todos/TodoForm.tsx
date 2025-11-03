@@ -1,7 +1,7 @@
 import { FormControl, ListGroupItem, Button } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { addTodo, updateTodo, setTodo } from "./todosReducer";
-import type { RootState } from "../../store"; 
+// import type { RootState } from "../../store"; 
 
 interface Todo {
   id: string;
@@ -11,7 +11,7 @@ interface Todo {
 export default function TodoForm() {
   const dispatch = useDispatch();
 
-  const todo = useSelector((state: RootState) => state.todosReducer.todo) as Todo;
+  const todo = useSelector((state: {todosReducer: {todo: {id: string, title: string}}}) => state.todosReducer.todo) as Todo;
 
   return (
     <ListGroupItem>

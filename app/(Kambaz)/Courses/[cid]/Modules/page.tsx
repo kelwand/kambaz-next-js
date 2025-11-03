@@ -9,7 +9,7 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addModule, deleteModule, updateModule, editModule } from "./reducer";
-import { RootState } from "../../../store";
+import { AccountState, ModulesState } from "../../../store";
 
 interface Lesson {
   _id: string;
@@ -34,8 +34,8 @@ interface User {
 export default function Modules() {
   const { cid } = useParams() as { cid: string };
   const [moduleName, setModuleName] = useState("");
-  const modules: Module[] = useSelector((state: RootState) => state.modulesReducer.modules);
-  const { currentUser } = useSelector((state: RootState) => state.accountReducer) as { currentUser: User | null };
+  const modules: Module[] = useSelector((state: ModulesState) => state.modulesReducer.modules);
+  const { currentUser } = useSelector((state: AccountState) => state.accountReducer) as { currentUser: User | null };
   const dispatch = useDispatch();
 
   const isFaculty = currentUser?.role === "FACULTY";

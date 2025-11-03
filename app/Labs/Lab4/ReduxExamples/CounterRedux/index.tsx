@@ -4,10 +4,9 @@ import { increment, decrement } from "./counterReducer";
 import type { RootState, AppDispatch } from "../../store"; 
 
 export default function CounterRedux() {
-  const count = useSelector((state: RootState) => state.counterReducer.count);
-
-  const dispatch: AppDispatch = useDispatch();
-
+  const { count } = useSelector((state: RootState) => state.counterReducer);
+  const dispatch = useDispatch();
+  
   return (
     <div id="wd-counter-redux">
       <h2>Counter Redux</h2>

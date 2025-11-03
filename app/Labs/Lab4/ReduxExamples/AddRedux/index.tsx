@@ -11,8 +11,8 @@ export default function AddRedux() {
   const [b, setB] = useState<number>(23);
 
   const sum = useSelector((state: RootState) => state.addReducer.sum);
-
   const dispatch = useDispatch();
+
 
   const handleAChange = (e: ChangeEvent<HTMLInputElement>) => {
     setA(parseInt(e.target.value) || 0);

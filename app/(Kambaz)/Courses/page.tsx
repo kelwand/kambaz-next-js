@@ -2,7 +2,7 @@
 
 import { useSelector } from "react-redux";
 import { redirect } from "next/navigation";
-import { RootState } from "../store"; 
+import { AccountState } from "../store"; 
 
 interface User {
   _id: string;
@@ -11,7 +11,7 @@ interface User {
 }
 
 export default function CoursesPage() {
-  const { currentUser } = useSelector((state: RootState) => state.accountReducer) as { currentUser: User | null };
+  const { currentUser } = useSelector((state: AccountState) => state.accountReducer) as { currentUser: User | null };
 
   if (currentUser === undefined) return null;
   if (!currentUser) redirect("/Account/Signin");

@@ -4,7 +4,7 @@ import { ListGroup } from "react-bootstrap";
 import TodoForm from "./TodoForm";
 import TodoItem from "./TodoItem";
 import { useSelector } from "react-redux";
-import type { RootState } from "../../store"; 
+// import type { RootState } from "../../store"; 
 
 interface Todo {
   id: string;
@@ -12,7 +12,7 @@ interface Todo {
 }
 
 export default function TodoList() {
-  const todos = useSelector((state: RootState) => state.todosReducer.todos) as Todo[];
+  const todos = useSelector((state: {todosReducer: {todos: {id: string, title: string}[]}}) => state.todosReducer.todos) as Todo[];
 
   return (
     <div id="wd-todo-list-redux">
