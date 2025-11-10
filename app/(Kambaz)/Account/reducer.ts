@@ -9,6 +9,9 @@ const accountSlice = createSlice({
     setCurrentUser: (state, action) => {
       state.currentUser = action.payload;
     },
+    signout: (state) => {
+      state.currentUser = null;
+    },
   },
 });
 export const { setCurrentUser } = accountSlice.actions;

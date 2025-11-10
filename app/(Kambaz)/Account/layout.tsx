@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import KambazNavigation from "./Navigation";
+
 export default function AccountLayout({ children }: Readonly<{ children: ReactNode }>) {
  return (
    <div>

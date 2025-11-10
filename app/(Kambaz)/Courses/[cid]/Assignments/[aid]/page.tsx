@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { Assignment, addAssignment, updateAssignment } from "../reducer";
 import { AccountState, AssignmentsState } from "../../../../store";
+import * as client from "../client";
+
 
 interface User {
   _id: string;
@@ -20,9 +22,9 @@ interface User {
 export default function AssignmentEditor() {
   const { cid, aid } = useParams() as { cid: string; aid: string };
   const dispatch = useDispatch();
-  
+
   const { currentUser } = useSelector((state: AccountState) => state.accountReducer) as { currentUser: User | null };
-  
+
   const assignments: Assignment[] = useSelector(
     (state: AssignmentsState) => state.assignmentsReducer.assignments
   );
@@ -31,7 +33,7 @@ export default function AssignmentEditor() {
   const assignment = assignments.find((a) => a._id === aid);
   const isNew = aid === "New";
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const newAssignment: Assignment = {
       _id: isNew ? new Date().getTime().toString() : assignment!._id,
       title: (document.getElementById("wd-name") as HTMLInputElement).value,
@@ -42,9 +44,15 @@ export default function AssignmentEditor() {
       available: (document.getElementById("wd-available-from") as HTMLInputElement).value,
       until: (document.getElementById("wd-available-until") as HTMLInputElement).value,
     };
-
-    if (isNew) dispatch(addAssignment(newAssignment));
-    else dispatch(updateAssignment(newAssignment));
+    try {
+      if (isNew) {
+        await client.createAssignment(cid, newAssignment);
+      } else {
+        await client.updateAssignment(aid, newAssignment);
+      }
+    } catch (err) {
+      console.error("Error saving assignment:", err);
+    }
   };
 
   if (!assignment && !isNew) return <p>Assignment not found!</p>;

@@ -7,7 +7,10 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { Assignment, deleteAssignment } from "./reducer";
+import * as client from "./client"; 
 import { AccountState, AssignmentsState } from "../../../store";
+import { useEffect, useState } from "react";
+
 
 interface User {
   _id: string;
@@ -22,13 +25,28 @@ export default function Assignments() {
   const { currentUser } = useSelector((state: AccountState) => state.accountReducer) as { currentUser: User | null };
   const isFaculty = currentUser?.role === "FACULTY";
 
-  const assignments: Assignment[] = useSelector((state: AssignmentsState) =>
-    state.assignmentsReducer.assignments.filter((a) => a.course === cid)
-  );
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
 
-  const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this assignment?")) {
-      dispatch(deleteAssignment(id));
+  const fetchAssignments = async () => {
+    try {
+      const data = await client.findAssignmentsForCourse(cid);
+      setAssignments(data);
+    } catch (error) {
+      console.error("Error fetching assignments:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAssignments();
+  }, [cid]);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this assignment?")) return;
+    try {
+      await client.deleteAssignment(id);
+      setAssignments(assignments.filter((a) => a._id !== id));
+    } catch (err) {
+      console.error("Error deleting assignment:", err);
     }
   };
 

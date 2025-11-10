@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import * as db from "../../Database";
 import { AppDispatch } from "../../store"; 
+import * as client from "../client";
 
 interface Credentials {
   username: string;
@@ -28,15 +29,9 @@ export default function Signin() {
   const [credentials, setCredentials] = useState<Credentials>({ username: "", password: "" });
   const dispatch = useDispatch<AppDispatch>();
 
-  const signin = () => {
-    const user: User | undefined = db.users.find(
-      (u: User) =>
-        u.username === credentials.username &&
-        u.password === credentials.password
-    );
-
+  const signin =  async () => {
+    const user =  await client.signin(credentials);
     if (!user) return;
-
     dispatch(setCurrentUser(user));
     redirect("/Dashboard");
   };
