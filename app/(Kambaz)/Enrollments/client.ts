@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_BASE = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:4000";
+const API_BASE = process.env.NEXT_PUBLIC_HTTP_SERVER;
 const ENROLLMENTS_API = `${API_BASE}/api`;
 
 export const enrollUserInCourse = async (userId: string, courseId: string) => {
