@@ -26,7 +26,7 @@ export default function AccountNavigation() {
         <NavItem key={link}>
           <NavLink
             as={Link}
-            href={`/${link.toLowerCase()}`}
+            href={`/Account/${link}`}
             active={pathname.endsWith(link.toLowerCase())}
           >
             {link}
