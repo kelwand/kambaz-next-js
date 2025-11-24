@@ -2,11 +2,17 @@
 
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { ListGroup, ListGroupItem } from "react-bootstrap";
+import { ListGroupItem } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 
 export default function CourseNavigation() {
-  const { cid } = useParams(); 
+  const { currentUser } = useSelector(
+    (state: RootState) => state.accountReducer
+  ) as any;
+
+  const { cid } = useParams();
   const pathname = usePathname();
 
   const links = [
@@ -34,7 +40,7 @@ export default function CourseNavigation() {
         return (
           <ListGroupItem key={link} className={getItemClasses(`/${link}`)}>
             <Link
-              href={`/Courses/${cid}/${route}`} 
+              href={`/Courses/${cid}/${route}`}
               className={getLinkClasses(`/${link}`)}
             >
               {link}

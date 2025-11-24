@@ -3,37 +3,45 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Nav, NavItem, NavLink } from "react-bootstrap";
-import { TypedUseSelectorHook, useSelector } from "react-redux";
-// import type { RootState } from "../store";
-
-interface User {
-  _id: string;
-  role: string;
-  [key: string]: unknown;
-}
-
-// const useSelector: TypedUseSelectorHook<RootState> = useReduxSelector;
+import { useSelector } from "react-redux";
 
 export default function AccountNavigation() {
-  const currentUser = useSelector((state: {accountReducer: {currentUser: {username: string, password: string}}}) => state.accountReducer.currentUser);
-
+  const currentUser = useSelector((state: any) => state.accountReducer.currentUser);
   const links = currentUser ? ["Profile"] : ["Signin", "Signup"];
   const pathname = usePathname();
 
+  const getLinkClasses = (link: string) =>
+    pathname.endsWith(link) || pathname.endsWith(link.toLowerCase())
+      ? "text-black fw-bold"    
+      : "text-danger";           
+
   return (
-    <Nav variant="pills">
+    <Nav>
       {links.map((link) => (
         <NavItem key={link}>
           <NavLink
             as={Link}
             href={`/Account/${link}`}
             active={pathname.endsWith(link.toLowerCase())}
+            className={getLinkClasses(link)}
           >
             {link}
           </NavLink>
         </NavItem>
       ))}
+
+      {currentUser?.role === "ADMIN" && (
+        <NavItem>
+          <NavLink
+            as={Link}
+            href="/Account/Users"
+            active={pathname.endsWith("Users")}
+            className={getLinkClasses("Users")}
+          >
+            Users
+          </NavLink>
+        </NavItem>
+      )}
     </Nav>
   );
 }
- 
