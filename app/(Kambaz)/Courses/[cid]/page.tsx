@@ -2,8 +2,9 @@
 
 import { useSelector } from "react-redux";
 import { redirect } from "next/navigation";
-import * as db from "../../Database";
-import { AccountState } from "../../store"; 
+import { useEffect, useState } from "react";
+import { findMyCourses } from "../client"; 
+import { AccountState } from "../../store";
 
 interface User {
   _id: string;
@@ -12,19 +13,29 @@ interface User {
 }
 
 export default function CoursePage({ params }: { params: { cid: string } }) {
-  const { currentUser } = useSelector((state: AccountState) => state.accountReducer) as { currentUser: User | null };
+  const { currentUser } = useSelector(
+    (state: AccountState) => state.accountReducer
+  ) as { currentUser: User | null };
+
   const { cid } = params;
+
+  const [isEnrolled, setIsEnrolled] = useState<boolean | null>(null);
 
   if (currentUser === undefined) return null;
   if (!currentUser) redirect("/Account/Signin");
 
-  const { enrollments } = db;
   const isFaculty = currentUser?.role === "FACULTY";
 
-  const isEnrolled = enrollments.some(
-    (enrollment) =>
-      enrollment.user === currentUser._id && enrollment.course === cid
-  );
+  useEffect(() => {
+    const load = async () => {
+      const myCourses = await findMyCourses(); 
+      const enrolled = myCourses.some((c: any) => c._id === cid);
+      setIsEnrolled(enrolled);
+    };
+    load();
+  }, [cid]);
+
+  if (isEnrolled === null) return null; 
 
   if (isFaculty || isEnrolled) {
     redirect(`/Courses/${cid}/Home`);

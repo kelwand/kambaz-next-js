@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 import { setCurrentUser } from "../reducer";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
-import * as db from "../../Database";
 import { AppDispatch } from "../../store"; 
 import * as client from "../client";
 

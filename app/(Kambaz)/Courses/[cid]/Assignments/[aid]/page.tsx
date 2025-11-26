@@ -2,145 +2,127 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { useSelector, useDispatch } from "react-redux";
-import { Assignment, addAssignment, updateAssignment } from "../reducer";
-import { AccountState, AssignmentsState } from "../../../../store";
+import { useSelector } from "react-redux";
+import { AccountState } from "../../../../store";
 import * as client from "../client";
-
-
-interface User {
-  _id: string;
-  username: string;
-  password: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  dob?: string;
-  role: "USER" | "ADMIN" | "FACULTY" | "STUDENT";
-}
+import { useEffect, useState } from "react";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams() as { cid: string; aid: string };
-  const dispatch = useDispatch();
 
-  const { currentUser } = useSelector((state: AccountState) => state.accountReducer) as { currentUser: User | null };
-
-  const assignments: Assignment[] = useSelector(
-    (state: AssignmentsState) => state.assignmentsReducer.assignments
-  );
+  const { currentUser } = useSelector(
+    (state: AccountState) => state.accountReducer
+  ) as any;
 
   const isFaculty = currentUser?.role === "FACULTY";
-  const assignment = assignments.find((a) => a._id === aid);
+
   const isNew = aid === "New";
 
-  const handleSave = async () => {
-    const newAssignment: Assignment = {
-      _id: isNew ? new Date().getTime().toString() : assignment!._id,
-      title: (document.getElementById("wd-name") as HTMLInputElement).value,
-      course: cid,
-      description: (document.getElementById("wd-description") as HTMLTextAreaElement).value,
-      points: Number((document.getElementById("wd-points") as HTMLInputElement).value),
-      due: (document.getElementById("wd-due-date") as HTMLInputElement).value,
-      available: (document.getElementById("wd-available-from") as HTMLInputElement).value,
-      until: (document.getElementById("wd-available-until") as HTMLInputElement).value,
+  const [assignment, setAssignment] = useState<any>({
+    title: "",
+    description: "",
+    points: 100,
+    due: "",
+    available: "",
+    until: "",
+  });
+
+  useEffect(() => {
+    if (isNew) return;
+
+    const load = async () => {
+      const data = await client.findAssignmentById(aid);
+      setAssignment(data);
     };
-    try {
-      if (isNew) {
-        await client.createAssignment(cid, newAssignment);
-      } else {
-        await client.updateAssignment(aid, newAssignment);
-      }
-    } catch (err) {
-      console.error("Error saving assignment:", err);
+
+    load();
+  }, [aid]);
+
+  const handleSave = async () => {
+    if (isNew) {
+      await client.createAssignment(cid, assignment);
+    } else {
+      await client.updateAssignment(aid, assignment);
     }
   };
 
-  if (!assignment && !isNew) return <p>Assignment not found!</p>;
-
   return (
-    <div id="wd-assignments-editor" style={{ maxWidth: "600px", margin: "0 auto" }}>
-      <label htmlFor="wd-name"><strong>Assignment Name</strong></label>
+    <div id="wd-assignments-editor" className="p-3" style={{ maxWidth: 600 }}>
+      <h3>{isNew ? "New Assignment" : "Edit Assignment"}</h3>
+
+      <label><b>Assignment Name</b></label>
       <input
-        id="wd-name"
-        defaultValue={assignment?.title || ""}
-        disabled={!isFaculty}
         className="form-control mb-3"
+        value={assignment.title}
+        disabled={!isFaculty}
+        onChange={(e) => setAssignment({ ...assignment, title: e.target.value })}
       />
 
-      <label htmlFor="wd-description">Description</label>
+      <label>Description</label>
       <textarea
-        id="wd-description"
-        rows={4}
-        defaultValue={assignment?.description || ""}
-        disabled={!isFaculty}
         className="form-control mb-3"
+        rows={4}
+        value={assignment.description}
+        disabled={!isFaculty}
+        onChange={(e) =>
+          setAssignment({ ...assignment, description: e.target.value })
+        }
       />
 
-      <table style={{ width: "100%" }}>
-        <tbody>
-          <tr>
-            <td align="right" style={{ width: "120px" }}>
-              <label htmlFor="wd-points">Points</label>
-            </td>
-            <td>
-              <input
-                id="wd-points"
-                type="number"
-                defaultValue={assignment?.points ?? 100}
-                disabled={!isFaculty}
-                className="form-control mb-2"
-              />
-            </td>
-          </tr>
+      <label>Points</label>
+      <input
+        type="number"
+        className="form-control mb-3"
+        value={assignment.points}
+        disabled={!isFaculty}
+        onChange={(e) =>
+          setAssignment({ ...assignment, points: Number(e.target.value) })
+        }
+      />
 
-          <tr>
-            <td align="right"><label htmlFor="wd-due-date">Due</label></td>
-            <td>
-              <input
-                id="wd-due-date"
-                type="date"
-                defaultValue={assignment?.due || ""}
-                disabled={!isFaculty}
-                className="form-control mb-2"
-              />
-            </td>
-          </tr>
+      <label>Due Date</label>
+      <input
+        type="date"
+        className="form-control mb-3"
+        value={assignment.due}
+        disabled={!isFaculty}
+        onChange={(e) =>
+          setAssignment({ ...assignment, due: e.target.value })
+        }
+      />
 
-          <tr>
-            <td align="right"><label htmlFor="wd-available-from">Available From</label></td>
-            <td>
-              <input
-                id="wd-available-from"
-                type="date"
-                defaultValue={assignment?.available || ""}
-                disabled={!isFaculty}
-                className="form-control mb-2"
-              />
-            </td>
-          </tr>
+      <label>Available From</label>
+      <input
+        type="date"
+        className="form-control mb-3"
+        value={assignment.available}
+        disabled={!isFaculty}
+        onChange={(e) =>
+          setAssignment({ ...assignment, available: e.target.value })
+        }
+      />
 
-          <tr>
-            <td align="right"><label htmlFor="wd-available-until">Available Until</label></td>
-            <td>
-              <input
-                id="wd-available-until"
-                type="date"
-                defaultValue={assignment?.until || ""}
-                disabled={!isFaculty}
-                className="form-control mb-2"
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <label>Available Until</label>
+      <input
+        type="date"
+        className="form-control mb-3"
+        value={assignment.until}
+        disabled={!isFaculty}
+        onChange={(e) =>
+          setAssignment({ ...assignment, until: e.target.value })
+        }
+      />
 
-      <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+      <div className="d-flex justify-content-end gap-2">
         <Link href={`/Courses/${cid}/Assignments`}>
           <button className="btn btn-secondary">Cancel</button>
         </Link>
+
         {isFaculty && (
           <Link href={`/Courses/${cid}/Assignments`}>
-            <button className="btn btn-danger" onClick={handleSave}>Save</button>
+            <button className="btn btn-danger" onClick={handleSave}>
+              Save
+            </button>
           </Link>
         )}
       </div>

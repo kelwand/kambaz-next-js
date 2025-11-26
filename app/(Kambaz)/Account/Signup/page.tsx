@@ -12,13 +12,15 @@ export default function Signup() {
   const dispatch = useDispatch();
 
   const signup = async () => {
-    try {
+    // try {
       const currentUser = await client.signup(user);
+      console.log("Signed up user:", currentUser);
       dispatch(setCurrentUser(currentUser));
-      redirect("/Account/Profile"); 
-    } catch (error) {
-      alert("Signup failed. Try again or use a different username.");
-    }
+      console.log("Dispatched current user to Redux store");
+      redirect("Profile"); 
+    // } catch (error) {
+    //   alert("!!!!!!!!Signup failed. Try again or use a different username.");
+    // }
   };
 
   return (

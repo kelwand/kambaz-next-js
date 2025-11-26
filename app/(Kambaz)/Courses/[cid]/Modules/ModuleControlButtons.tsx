@@ -17,10 +17,12 @@ export default function ModuleControlButtons({
   moduleId,
   deleteModule,
   editModule,
+  saveModule,
 }: {
   moduleId: string;
   deleteModule: (moduleId: string) => void;
   editModule: (moduleId: string) => void;
+  saveModule: (moduleId: string) => void;
 }) {
   const { currentUser } = useSelector((state: AccountState) => state.accountReducer) as { currentUser: User | null };
   const isFaculty = currentUser?.role === "FACULTY";
@@ -40,8 +42,11 @@ export default function ModuleControlButtons({
         onClick={() => deleteModule(moduleId)}
       />
 
-      <GreenCheckmark />
+      <GreenCheckmark 
+        onClick={() => saveModule(moduleId)}
+      />
       <BsPlus className="fs-4 ms-1" />
+      
     </div>
   );
 }

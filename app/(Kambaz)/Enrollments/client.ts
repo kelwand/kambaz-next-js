@@ -1,27 +1,22 @@
 import axios from "axios";
+
 const API_BASE = process.env.NEXT_PUBLIC_HTTP_SERVER;
-const ENROLLMENTS_API = `${API_BASE}/api`;
+const API = `${API_BASE}/api`;
 
 export const enrollUserInCourse = async (userId: string, courseId: string) => {
-  const response = await axios.post(
-    `${ENROLLMENTS_API}/users/${userId}/courses/${courseId}/enrollments`
-  );
+  const url = `${API}/users/${userId}/courses/${courseId}/enroll`;
+  const response = await axios.post(url);
   return response.data;
 };
 
 export const unenrollUserFromCourse = async (userId: string, courseId: string) => {
-  const response = await axios.delete(
-    `${ENROLLMENTS_API}/users/${userId}/courses/${courseId}/enrollments`
-  );
+  const url = `${API}/users/${userId}/courses/${courseId}/enroll`;
+  const response = await axios.delete(url);
   return response.data;
 };
 
-export const findCoursesForUser = async (userId: string) => {
-  const response = await axios.get(`${ENROLLMENTS_API}/users/${userId}/enrollments`);
-  return response.data;
-};
-
-export const findAllEnrollments = async () => {
-  const response = await axios.get(`${ENROLLMENTS_API}/enrollments`);
+export const findEnrollmentsForUser = async (userId: string) => {
+  const url = `${API}/users/${userId}/courses`;
+  const response = await axios.get(url);
   return response.data;
 };

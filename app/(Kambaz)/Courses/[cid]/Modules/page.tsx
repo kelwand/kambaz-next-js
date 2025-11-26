@@ -9,7 +9,7 @@ import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setModules, addModule, deleteModule, updateModule, editModule } from "./reducer";
-import * as client from "../../client"; 
+import * as client from "../../client";
 import { AccountState, ModulesState } from "../../../store";
 
 interface Lesson {
@@ -63,7 +63,7 @@ export default function Modules() {
 
   const onRemoveModule = async (moduleId: string) => {
     try {
-      await client.deleteModule(moduleId);
+      await client.deleteModule(cid, moduleId);
       dispatch(setModules(modules.filter((m) => m._id !== moduleId)));
     } catch (error) {
       console.error("Error deleting module:", error);
@@ -71,16 +71,16 @@ export default function Modules() {
   };
 
   const onUpdateModule = async (module: any) => {
-    await client.updateModule(module);
-    const newModules = modules.map((m: any) => m._id === module._id ? module : m );
-    dispatch(setModules(newModules));
+    const updatedModule = await client.updateModule(cid, module);
+    dispatch(
+      setModules(modules.map((m) => (m._id === module._id ? updatedModule : m)))
+    );
   };
-
 
 
   useEffect(() => {
     fetchModules();
-  }, [cid]); 
+  }, [cid]);
 
   return (
     <div className="wd-modules">
@@ -108,7 +108,8 @@ export default function Modules() {
                     }
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
-                         onUpdateModule({ ...module, editing: false });
+                        onUpdateModule({ ...module, editing: false });
+
                       }
                     }}
                   />
@@ -119,6 +120,13 @@ export default function Modules() {
                 moduleId={module._id}
                 deleteModule={(moduleId) => onRemoveModule(moduleId)}
                 editModule={(id) => dispatch(editModule(id))}
+                saveModule={(moduleId) => {
+                  const updated = modules.find((m) => m._id === moduleId);
+                  if (!updated) return;
+
+                  onUpdateModule({ ...updated, editing: false });
+                }}
+
               />
             </div>
 
