@@ -12,7 +12,7 @@ import * as enrollmentsClient from "../Enrollments/client";
 
 import { setCourses } from "../Courses/reducer";
 import type { AppDispatch, AccountState, CoursesState } from "../store";
-
+//interface
 interface Course {
   _id: string;
   name: string;
